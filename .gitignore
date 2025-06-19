@@ -1,0 +1,34 @@
+# Compiled files
+__pycache__/
+*.py[cod]
+*.so
+
+# Virtual environments
+.venv/
+env/
+venv/
+
+# Uploads and temp files
+uploads/
+*.log
+*.tmp
+
+# Vector index and models
+vector_index.faiss
+metadata.pkl
+
+# Ignore sample documents
+docs-sm/
+
+# Editor settings
+.vscode/
+.idea/
+
+# System files
+.DS_Store
+
+# Jupyter checkpoints
+.ipynb_checkpoints/
+
+# Ollama local models (optional)
+ollama/

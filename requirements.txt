@@ -1,0 +1,17 @@
+# requirements.txt
+fastapi==0.115.13
+uvicorn[standard]==0.34.3
+python-multipart==0.0.9
+aiofiles==24.1.0
+requests==2.32.3
+
+# OCR stack
+easyocr==1.7.2
+pillow==10.3.0
+numpy==1.26.4
+pdfplumber==0.11.7
+
+# Embeddings & vector search
+torch==2.7.0
+sentence-transformers==4.1.0
+faiss-cpu==1.11.0

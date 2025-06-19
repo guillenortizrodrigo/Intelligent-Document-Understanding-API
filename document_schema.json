@@ -1,0 +1,18 @@
+{
+  "advertisement": ["title", "company_name", "product_name", "price", "contact_info", "date_published"],
+  "budget": ["budget_id", "project_name", "total_amount", "currency", "date_created", "approved_by"],
+  "email": ["sender", "recipient", "subject", "date_sent", "body"],
+  "file_folder": ["folder_name", "owner", "creation_date", "description"],
+  "form": ["form_id", "title", "fields", "submission_date", "submitted_by"],
+  "handwritten": ["author", "content_summary", "date_written"],
+  "invoice": ["invoice_number", "vendor_name", "date", "total_amount", "due_date", "currency"],
+  "letter": ["sender", "recipient", "subject", "date", "body"],
+  "memo": ["author", "recipient", "subject", "date", "content"],
+  "news_article": ["headline", "author", "publication", "date_published", "summary"],
+  "presentation": ["title", "author", "date", "topic", "slide_count"],
+  "questionnaire": ["title", "target_audience", "question_count", "date_created"],
+  "resume": ["name", "email", "phone", "education", "experience", "skills"],
+  "scientific_publication": ["title", "authors", "journal", "publication_date", "abstract", "keywords"],
+  "scientific_report": ["report_id", "title", "authors", "institution", "date", "summary"],
+  "specification": ["spec_id", "title", "version", "author", "date", "description"]
+}
