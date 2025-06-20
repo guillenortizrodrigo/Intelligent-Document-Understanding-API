@@ -13,6 +13,7 @@
 ## Table of Contents
 
 - [Architecture & Flow](#architecture--flow)
+- [Example of use ](#example-of-use)
 - [Requirements](#requirements)
 - [Installation](#installation)
 - [Environment Variables](#environment-variables)
