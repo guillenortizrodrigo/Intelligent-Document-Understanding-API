@@ -22,8 +22,6 @@
 - [Project Structure](#project-structure)
 - [Building or Updating the FAISS Index](#building-or-updating-the-faiss-index)
 - [Testing](#testing)
-- [Contributing](#contributing)
-- [License](#license)
 
 ---
 
@@ -64,6 +62,45 @@
 7. **Cleanup**\
    The temporary file is deleted after processing.
 
+---
+
+## Example of use 
+
+### Uploaded image
+
+![Ejemplo](docs/email-example.jpg)
+
+### Reqeuest
+
+```bash
+curl -X POST http://localhost:8000/extract_entities/ \
+  -F "files=@docs/527792930+-2930.jpg"
+```
+
+### Response
+```json
+{
+  "results": [
+    {
+      "filename": "temp_6188491238a34748a63f964118121767_527792930+-2930.jpg",
+      "document_type": "email",
+      "confidence": 1,
+      "entities": [
+        {
+          "sender": "Miller; Barry K",
+          "recipient": [
+            "Tompson, Randy; Smith, Lyle B.; Powell, Lisa (WKA)"
+          ],
+          "subject": "Recent polls about tobacco",
+          "date_sent": "1996-Sep-04 08:55.00",
+          "body": "not found"
+        },
+        2.67249108399983
+      ]
+    }
+  ]
+}
+```
 ---
 
 ## Requirements
