@@ -16,6 +16,7 @@
 - [Example of use ](#example-of-use)
 - [Requirements](#requirements)
 - [Installation](#installation)
+- [Installation with Docker](#installation-with-docker)
 - [Environment Variables](#environment-variables)
 - [Running the App](#running-the-app)
 - [Running the App with Docker](#running-the-app-with-docker)
@@ -141,6 +142,25 @@ $ pip install -r requirements.txt
 
 ---
 
+## Installation with Docker
+```bash
+# 1. Clone the repository
+$ git clone https://github.com/guillenortizrodrigo/Intelligent-Document-Understanding-API.git
+
+# 2. Go to the project directory
+$ cd Intelligent-Document-Understanding-API
+
+# 3. Start the application with Docker
+$ docker compose up
+
+# 4. n another terminal, pull the Llama model:
+$ docker compose exec ollama ollama pull llama3:8b
+
+#5 Press Ctrl + C in the terminal running Docker. 
+```
+
+---
+
 ## Environment Variables
 
 | Variable     | Default                  | Description            |
@@ -201,11 +221,8 @@ Visit [http://localhost:8000/docs](http://localhost:8000/docs) for interactive S
    ```bash
    # 1) Open a terminal in the project directory
    
-   # 2) Run the docker compose file (this starts the API and Ollama)
-   docker compose up -d
-   
-   # 3) In a new terminal (same directory), download the model:
-   docker compose exec ollama ollama pull llama3:8b
+   # 2) Run the docker compose file
+   $ docker compose up
    ```
 ---
 
