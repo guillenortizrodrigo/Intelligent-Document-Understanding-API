@@ -24,6 +24,8 @@
 - [Project Structure](#project-structure)
 - [Building or Updating the FAISS Index](#building-or-updating-the-faiss-index)
 - [Testing](#testing)
+- [CI Implementation with GithubActions](#ci-implementation-with-githubactions)
+
 
 ---
 
@@ -272,6 +274,20 @@ print(response.json())
    ```bash
    $ python install pytest
    ```
-2. Run `pytest` to execute all the tests defined on test_api.py.
+2. Run `pytest -v` to execute all the tests defined on test_api.py.
+
+| Component         | Test file                      | Description                                                                 |
+|------------------|--------------------------------|-----------------------------------------------------------------------------|
+| **OCR**          | `tests/test_ocr.py`            | Tests image and PDF processing. Ensures OCR runs on empty files and verifies preprocessing steps. |
+| **Classifier**   | `tests/test_classifier.py`     | Checks that embeddings are generated from text and return correct labels and scores. |
+| **LLM Prompt**   | `tests/test_llm.py`            | Validates the prompt construction and handles malformed JSON from the LLM. |
+| **API Integration** | `tests/test_integration_api.py` | Simulates full pipeline: upload → OCR → classify → extract entities with LLM. Uses mocks for isolation. |
+
+---
+
+### CI Implementation with GithubActions
+
+- Tests are automatically triggered on every push using **GitHub Actions**.
+- The workflow configuration can be found in `.github/workflows/`.
 
 ---
