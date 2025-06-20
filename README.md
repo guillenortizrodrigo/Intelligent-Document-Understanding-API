@@ -17,7 +17,6 @@
 - [Requirements](#requirements)
 - [Installation](#installation)
 - [Installation with Docker](#installation-with-docker)
-- [Environment Variables](#environment-variables)
 - [Running the App](#running-the-app)
 - [Running the App with Docker](#running-the-app-with-docker)
 - [Endpoint: /extract\_entities](#endpoint-extract_entities)
@@ -161,17 +160,6 @@ $ docker compose exec ollama ollama pull llama3:8b
 
 ---
 
-## Environment Variables
-
-| Variable     | Default                  | Description            |
-| ------------ | ------------------------ | ---------------------- |
-| `OLLAMA_API` | `http://localhost:11434` | Ollama server endpoint |
-| `UPLOAD_DIR` | `uploads`                | Temporary file folder  |
-
-You can use a `.env` file along with [python-dotenv](https://pypi.org/project/python-dotenv/) for customization.
-
----
-
 ## Running the App
 
 ### Development Mode
@@ -182,6 +170,15 @@ uvicorn main:app --reload
 
 Visit [http://localhost:8000/docs](http://localhost:8000/docs) for interactive Swagger docs.
 
+---
+
+## Running the App with Docker
+   ```bash
+   # 1) Open a terminal in the project directory
+   
+   # 2) Run the docker compose file
+   $ docker compose up
+   ```
 ---
 
 ## Endpoint `/extract_entities`
@@ -215,15 +212,6 @@ Visit [http://localhost:8000/docs](http://localhost:8000/docs) for interactive S
   ]
 }
 ```
-
----
-## Running the App with Docker
-   ```bash
-   # 1) Open a terminal in the project directory
-   
-   # 2) Run the docker compose file
-   $ docker compose up
-   ```
 ---
 
 ## Usage Examples
