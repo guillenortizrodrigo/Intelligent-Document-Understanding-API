@@ -196,6 +196,17 @@ Visit [http://localhost:8000/docs](http://localhost:8000/docs) for interactive S
 ```
 
 ---
+## Running the App with Docker
+   ```bash
+   # 1) Open a terminal in the project directory
+   
+   # 2) Run the docker compose file (this starts the API and Ollama)
+   docker compose up -d
+   
+   # 3) In a new terminal (same directory), download the model:
+   docker compose exec ollama ollama pull llama3:8b
+   ```
+---
 
 ## Usage Examples
 
