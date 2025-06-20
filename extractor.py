@@ -1,9 +1,3 @@
-# extractor.py
-"""
-Extrae entidades con un modelo local (llama3) sirviendo vía Ollama.
-Devuelve: entidades (dict) | error (str) | tiempo de proceso (float s)
-"""
-
 import requests
 import time
 import json, pathlib

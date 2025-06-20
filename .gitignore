@@ -32,3 +32,23 @@ docs-sm/
 
 # Ollama local models (optional)
 ollama/
+
+# ── pytest ─────────────────────────────────────────────────────
+.pytest_cache/
+# Si usas pytest-split o plugins que generen archivos temporales:
+pytestdebug.log
+
+# ── coverage ───────────────────────────────────────────────────
+# Archivo binario con estadísticas
+.coverage
+# Variantes cuando usas --parallel
+.coverage.*
+# Reporte en texto/XML
+coverage.xml
+# Carpeta HTML generada con `coverage html`
+htmlcov/
+
+# ── Otros artefactos de pruebas ────────────────────────────────
+# Si generas profile de pytest-cov
+.cache/
+

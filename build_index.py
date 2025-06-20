@@ -54,6 +54,6 @@ if embeddings_list:
     with open(OUTPUT_METADATA, "wb") as f:
         pickle.dump(metadata_list, f)
 
-    print("✅ FAISS y metadata guardados.")
+    print("FAISS y metadata guardados.")
 else:
-    print("⚠️ No se encontraron documentos válidos.")
+    print("No se encontraron documentos válidos.")

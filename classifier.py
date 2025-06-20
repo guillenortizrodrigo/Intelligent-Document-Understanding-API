@@ -1,5 +1,3 @@
-# classifier.py
-
 import faiss
 import pickle
 import numpy as np
