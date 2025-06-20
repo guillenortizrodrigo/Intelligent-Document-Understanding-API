@@ -22,8 +22,6 @@
 - [Project Structure](#project-structure)
 - [Building or Updating the FAISS Index](#building-or-updating-the-faiss-index)
 - [Testing](#testing)
-- [Contributing](#contributing)
-- [License](#license)
 
 ---
 
