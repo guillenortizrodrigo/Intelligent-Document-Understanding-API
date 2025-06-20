@@ -210,13 +210,3 @@ print(response.json())
 > Rebuild the index whenever new document types or samples are added.
 
 ---
-
-## Building or Updating the FAISS Index
-
-1. Organize representative samples by type (`docs-sm/<label>/*.png|pdf`).
-2. Run `scripts/build_index.py` to generate embeddings and index.
-3. This will create `vector_index.faiss` and `metadata.pkl`.
-
-> Rebuild the index whenever new document types or samples are added.
-
----
