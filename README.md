@@ -16,8 +16,9 @@
 - [Example of use ](#example-of-use)
 - [Requirements](#requirements)
 - [Installation](#installation)
-- [Environment Variables](#environment-variables)
+- [Installation with Docker](#installation-with-docker)
 - [Running the App](#running-the-app)
+- [Running the App with Docker](#running-the-app-with-docker)
 - [Endpoint: /extract\_entities](#endpoint-extract_entities)
 - [Usage Examples](#usage-examples)
 - [Project Structure](#project-structure)
@@ -140,14 +141,22 @@ $ pip install -r requirements.txt
 
 ---
 
-## Environment Variables
+## Installation with Docker
+```bash
+# 1. Clone the repository
+$ git clone https://github.com/guillenortizrodrigo/Intelligent-Document-Understanding-API.git
 
-| Variable     | Default                  | Description            |
-| ------------ | ------------------------ | ---------------------- |
-| `OLLAMA_API` | `http://localhost:11434` | Ollama server endpoint |
-| `UPLOAD_DIR` | `uploads`                | Temporary file folder  |
+# 2. Go to the project directory
+$ cd Intelligent-Document-Understanding-API
 
-You can use a `.env` file along with [python-dotenv](https://pypi.org/project/python-dotenv/) for customization.
+# 3. Start the application with Docker
+$ docker compose up
+
+# 4. n another terminal, pull the Llama model:
+$ docker compose exec ollama ollama pull llama3:8b
+
+#5 Press Ctrl + C in the terminal running Docker. 
+```
 
 ---
 
@@ -161,6 +170,15 @@ uvicorn main:app --reload
 
 Visit [http://localhost:8000/docs](http://localhost:8000/docs) for interactive Swagger docs.
 
+---
+
+## Running the App with Docker
+   ```bash
+   # 1) Open a terminal in the project directory
+   
+   # 2) Run the docker compose file
+   $ docker compose up
+   ```
 ---
 
 ## Endpoint `/extract_entities`
@@ -194,7 +212,6 @@ Visit [http://localhost:8000/docs](http://localhost:8000/docs) for interactive S
   ]
 }
 ```
-
 ---
 
 ## Usage Examples
