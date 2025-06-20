@@ -24,7 +24,6 @@
 - [Project Structure](#project-structure)
 - [Building or Updating the FAISS Index](#building-or-updating-the-faiss-index)
 - [Testing](#testing)
-- [CI Implementation with GithubActions](#ci-implementation-with-githubactions)
 
 
 ---
@@ -282,8 +281,6 @@ print(response.json())
 | **Classifier**   | `tests/test_classifier.py`     | Checks that embeddings are generated from text and return correct labels and scores. |
 | **LLM Prompt**   | `tests/test_llm.py`            | Validates the prompt construction and handles malformed JSON from the LLM. |
 | **API Integration** | `tests/test_integration_api.py` | Simulates full pipeline: upload → OCR → classify → extract entities with LLM. Uses mocks for isolation. |
-
----
 
 ### CI Implementation with GithubActions
 
