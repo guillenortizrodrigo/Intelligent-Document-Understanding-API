@@ -18,6 +18,7 @@
 - [Installation](#installation)
 - [Environment Variables](#environment-variables)
 - [Running the App](#running-the-app)
+- [Running the App with Docker](#running-the-app-with-docker)
 - [Endpoint: /extract\_entities](#endpoint-extract_entities)
 - [Usage Examples](#usage-examples)
 - [Project Structure](#project-structure)
