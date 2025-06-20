@@ -1,11 +1,12 @@
 import requests
 import json, pathlib
+import os
 
 # Constants
 
-OLLAMA_API = "http://localhost:11434/api/chat"
+OLLAMA_API = os.getenv("OLLAMA_API","http://localhost:11434/api/chat")
 HEADERS = {"Content-Type": "application/json"}
-MODEL = "llama3.2"
+MODEL_OLLAMA = os.getenv("OLLAMA_MODEL","llama3.2")
 SCHEMA_PATH = pathlib.Path(__file__).with_name("document_schema.json")
 
 
@@ -25,7 +26,7 @@ def build_prompt(document_type: str, field_list: list[str], text: str) -> str:
 def build_payload(prompt):
     messages = [{"role": "user", "content": prompt}]
     return {
-        "model": MODEL,
+        "model": MODEL_OLLAMA,
         "messages": messages,
         "stream": False,
         "format": "json" 

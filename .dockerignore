@@ -1,0 +1,32 @@
+# ─ Archivos Python innecesarios ─
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+
+# ─ Entornos virtuales ─
+.venv/
+env/
+venv/
+
+# ─ Cachés y test artifacts ─
+.pytest_cache/
+.coverage
+*.log
+
+# ─ Carpetas que no se deben copiar ─
+docs/
+docs-sm/
+
+# ─ Archivos de configuración innecesarios ─
+.git/
+.gitignore
+.gitattributes
+
+# ─ Otros ─
+.DS_Store
+*.tmp
+*.swp
+
+ 

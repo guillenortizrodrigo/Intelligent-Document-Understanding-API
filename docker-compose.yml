@@ -1,0 +1,29 @@
+version: "3.9"
+
+services:
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama-data:/root/.ollama
+    restart: unless-stopped
+
+  api:
+    build:
+      context: .
+    container_name: entity-api
+    ports:
+      - "8000:8000"
+    depends_on:
+      - ollama
+    volumes:
+      - .:/app  # solo si estás montando el código local
+    environment:
+      - OLLAMA_API=http://ollama:11434/api/chat
+      - OLLAMA_MODEL=llama3:8b
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload  # ajusta si tu entrypoint es distinto
+
+volumes:
+  ollama-data:
