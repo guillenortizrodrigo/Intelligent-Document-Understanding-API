@@ -1,5 +1,4 @@
 import requests
-import time
 import json, pathlib
 
 # Constants
@@ -9,7 +8,7 @@ HEADERS = {"Content-Type": "application/json"}
 MODEL = "llama3.2"
 SCHEMA_PATH = pathlib.Path(__file__).with_name("document_schema.json")
 
-# Cárgalo una sola vez al iniciar el módulo
+
 with SCHEMA_PATH.open(encoding="utf-8") as f:
     DOCUMENT_SCHEMA: dict[str, list[str]] = json.load(f)
 
@@ -33,14 +32,12 @@ def build_payload(prompt):
     }
 
 def extract_entities_with_ollama(document_type: str, document_text: str):
-    t0 = time.perf_counter()
-
-    # obtener la lista de los campos
+    # get the fields
     field_list = DOCUMENT_SCHEMA.get(document_type)
     if not field_list:
         raise ValueError(f"[extract_entities] Document type '{document_type}' no está definido en document_schema.json")
 
-    # construir el payload
+    # payload
     prompt = build_prompt(document_type, field_list, document_text)
     payload = build_payload(prompt)
 
@@ -52,7 +49,7 @@ def extract_entities_with_ollama(document_type: str, document_text: str):
     except json.JSONDecodeError as e:
         raise ValueError(f"Ollama devolvió JSON inválido: {e}\nRAW:\n{raw}")
 
-    return entities, time.perf_counter() - t0
+    return entities
 
 
 

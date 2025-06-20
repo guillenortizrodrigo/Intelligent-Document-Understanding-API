@@ -7,24 +7,22 @@ import faiss
 import os
 import pickle
 
-# === Configuración ===
 BASE_DIR = Path("docs-sm")
 ALLOWED_EXTENSIONS = {".jpg", ".jpeg", ".png", ".tif", ".tiff", ".bmp"}
 OUTPUT_INDEX = "vector_index.faiss"
 OUTPUT_METADATA = "metadata.pkl"
 
-# === Modelos ===
+#models
 reader = easyocr.Reader(['en', 'es'], gpu=False)
 embedding_model = SentenceTransformer("all-MiniLM-L6-v2")
 
-# === Variables para FAISS ===
 embeddings_list = []
 metadata_list = []
 
-# === Procesar documentos ===
+#process all files
 for label_dir in BASE_DIR.iterdir():
     if label_dir.is_dir():
-        label = label_dir.name  # Ej: 'invoice', 'memo', etc.
+        label = label_dir.name
         for file in label_dir.glob("*"):
             if file.suffix.lower() in ALLOWED_EXTENSIONS:
                 try:
@@ -43,11 +41,11 @@ for label_dir in BASE_DIR.iterdir():
                 except Exception as e:
                     print(f"Error procesando {file}: {e}")
 
-# === Guardar en FAISS ===
+#save vector on FAIIS
 if embeddings_list:
     embeddings_np = np.array(embeddings_list, dtype="float32")
     dim = embeddings_np.shape[1]
-    index = faiss.IndexFlatIP(dim)  # Cosine sim (si normalizas)
+    index = faiss.IndexFlatIP(dim)
     index.add(embeddings_np)
 
     faiss.write_index(index, OUTPUT_INDEX)

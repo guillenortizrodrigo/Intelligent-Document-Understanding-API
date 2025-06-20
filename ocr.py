@@ -4,7 +4,7 @@ from PIL import Image
 import easyocr
 import pdfplumber
 
-# Carga el modelo una vez
+#load the model
 reader = easyocr.Reader(['es', 'en'], gpu=False)
 
 def ocr_image(path: Path) -> str:

@@ -8,6 +8,7 @@ from pathlib import Path
 from ocr import ocr_image, ocr_pdf
 from classifier import classify_document
 from extractor import extract_entities_with_ollama
+import time
 
 ALLOWED_EXTENSIONS = {"pdf", "png", "jpg", "jpeg"}
 UPLOAD_DIR = "uploads"
@@ -18,6 +19,7 @@ def allowed_file(filename: str) -> bool:
     return filename.split(".")[-1].lower() in ALLOWED_EXTENSIONS
 
 async def process_file(file_path: str) -> dict:
+    t0 = time.perf_counter()
     ext = Path(file_path).suffix.lower()
 
     # ---------- OCR ----------
@@ -32,17 +34,20 @@ async def process_file(file_path: str) -> dict:
             detail="No legible text found in document"
         )
         
-    # ---------- Clasificación semántica ----------
+    # ---------- classification ----------
     doc_type, confidence, hits = classify_document(text)
 
-    # ---------- Entities ----------
+    # ---------- LLM process ----------
     entities = extract_entities_with_ollama(doc_type,text)
+
+    processing_time = time.perf_counter() - t0
 
     return {
         "filename": Path(file_path).name,
         "document_type": doc_type,
         "confidence": round(confidence, 2),
-        "entities":entities
+        "entities":entities,
+        "processing_time": processing_time
     }
 
 @app.post("/extract_entities/")
