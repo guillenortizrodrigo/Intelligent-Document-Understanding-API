@@ -15,6 +15,7 @@
 - [Architecture & Flow](#architecture--flow)
 - [Example of use ](#example-of-use)
 - [Requirements](#requirements)
+- [Environment variables and LLM configuration](#environment-variables-and-llm-configuration)
 - [Installation](#installation)
 - [Installation with Docker](#installation-with-docker)
 - [Running the App](#running-the-app)
@@ -114,6 +115,53 @@ curl -X POST http://localhost:8000/extract_entities/ \
 | pip / venv          | —                   | Use virtual environments     |
 | Ollama              | ≥ 0.2.0             | Needs local `llama3.2` model |
 | Git                 | —                   | To clone repo                |
+
+---
+
+### Environment variables and LLM configuration
+
+## Environment variables
+
+| Variable | Default | Purpose |
+|-----------|---------|---------|
+| `OLLAMA_API` | `http://localhost:11434/api/chat` | Base URL of the chat endpoint (Ollama or OpenAI-compatible). |
+| `OLLAMA_MODEL` | `llama3.2` | Name or tag of the model to load with Ollama. |
+| `FAISS_INDEX_PATH` | `vector_index.faiss` | Override path to the FAISS index file (used by `classifier.py`). |
+| `FAISS_META_PATH` | `metadata.pkl` | Override path to pickled metadata that maps index rows to labels/paths. |
+| `UPLOAD_DIR` | `uploads` | Temporary directory for files saved by FastAPI before processing. |
+| `ALLOWED_EXTENSIONS` | `pdf,png,jpg,jpeg` | Comma-separated list checked by `allowed_file()`. |
+
+> **Tip:** create a `.env` file at the project root so `uvicorn` can auto-load
+> ```dotenv
+> OLLAMA_API=http://localhost:11434/api/chat
+> OLLAMA_MODEL=llama3.2
+> FAISS_INDEX_PATH=vector_index.faiss
+> FAISS_META_PATH=metadata.pkl
+> UPLOAD_DIR=uploads
+> ALLOWED_EXTENSIONS=pdf,png,jpg,jpeg
+> ```
+
+## LLM configuration
+
+```python
+OLLAMA_API   = os.getenv("OLLAMA_API",   "http://localhost:11434/api/chat")
+MODEL_OLLAMA = os.getenv("OLLAMA_MODEL", "llama3.2")
+```
+
+* **Prompt builder** – `build_prompt()` injects the predicted `document_type`,
+  expected field names, and raw OCR text.  
+* **Response format** – the model must answer **only** with valid JSON.  
+* **Streaming** – disabled (`"stream": False`) so the whole JSON can be parsed
+  in one go.  
+* **Error handling** – malformed JSON raises a `json.JSONDecodeError`
+  (wrap this in a fallback strategy if desired).
+
+To switch to OpenAI / Azure OpenAI:
+1. Set `OLLAMA_API=https://api.openai.com/v1/chat/completions`.
+2. Pass your `OPENAI_API_KEY` via headers in `HEADERS = {...}`.
+3. Update the payload shape if your provider requires `model`, `max_tokens`,
+   `temperature`, etc.
+
 
 ---
 
