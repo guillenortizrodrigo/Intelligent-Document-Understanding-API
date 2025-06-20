@@ -210,3 +210,13 @@ print(response.json())
 > Rebuild the index whenever new document types or samples are added.
 
 ---
+
+## Testing
+
+1. Install pytest
+   ```bash
+   $ python install pytest
+   ```
+2. Run `pytest` to execute all the tests defined on test_api.py.
+
+---
