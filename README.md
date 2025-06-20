@@ -13,6 +13,7 @@
 ## Table of Contents
 
 - [Architecture & Flow](#architecture--flow)
+- [Example of use ](#example-of-use)
 - [Requirements](#requirements)
 - [Installation](#installation)
 - [Environment Variables](#environment-variables)
@@ -68,7 +69,7 @@
 
 ### Uploaded image
 
-![Ejemplo](docs/email-example.jpg)
+![Ejemplo](docs/527792930+-2930.jpg)
 
 ### Reqeuest
 
@@ -125,8 +126,8 @@ curl -X POST http://localhost:8000/extract_entities/ \
    Install the python dependencies\
 ```bash
 # 1. Clone the repository
-$ git clone https://github.com/<your-user>/entity-extraction-api.git
-$ cd entity-extraction-api
+$ git clone https://github.com/guillenortizrodrigo/Intelligent-Document-Understanding-API.git
+$ cd Intelligent-Document-Understanding-API
 
 # 2. Create virtual environment
 $ python -m venv venv && source venv/bin/activate
