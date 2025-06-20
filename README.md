@@ -68,7 +68,7 @@
 
 ### Uploaded image
 
-![Ejemplo](docs/email-example.jpg)
+![Ejemplo](docs/527792930+-2930.jpg)
 
 ### Reqeuest
 
