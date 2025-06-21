@@ -5,21 +5,24 @@ from unittest.mock import patch
 
 client = TestClient(app)
 
-# --- Helper para verificar respuestas de error ---
+# -------------------------------------------------------------------- #
+# Helpers
+# -------------------------------------------------------------------- #
 def assert_error_response(response, expected_code, error_code, expected_message_substring):
     assert response.status_code == expected_code
     detail = response.json()["detail"]
     assert detail["error"] == error_code
     assert expected_message_substring in detail["message"]
 
-
-# --- Pruebas unitarias ---
+# -------------------------------------------------------------------- #
+# Unit tests
+# -------------------------------------------------------------------- #
 def test_allowed_file():
     assert allowed_file("file.pdf")
     assert not allowed_file("file.exe")
 
 
-@patch("main.ocr_image", return_value="   ")  # El OCR no encontró nada
+@patch("main.ocr_image", return_value="   ")
 def test_invalid_file_content(mock_ocr):
     file = io.BytesIO(b"contenido falso")
     response = client.post(
@@ -31,7 +34,8 @@ def test_invalid_file_content(mock_ocr):
 
 @patch("main.ocr_image", return_value="texto extraído del documento")
 @patch("main.classify_document", return_value=("invoice", 0.95, None))
-@patch("main.extract_entities_with_ollama", return_value={"nombre": "Pedro"})
+@patch("main.extract_entities_with_ollama",
+       return_value=({"nombre": "Pedro"}, '{"nombre": "Pedro"}'))   # ⬅️ tupla
 def test_successful_extraction(mock_ollama, mock_classify, mock_ocr):
     file = io.BytesIO(b"imagen falsa pero pasa")
     response = client.post(
@@ -48,7 +52,8 @@ def test_successful_extraction(mock_ollama, mock_classify, mock_ocr):
 
 @patch("main.ocr_image", return_value="texto simulado")
 @patch("main.classify_document", return_value=("memo", 0.87, None))
-@patch("main.extract_entities_with_ollama", return_value={"asunto": "reunión"})
+@patch("main.extract_entities_with_ollama",
+       return_value=({"asunto": "reunión"}, '{"asunto": "reunión"}'))  # ⬅️ tupla
 def test_multiple_files(mock_ollama, mock_classify, mock_ocr):
     file1 = io.BytesIO(b"contenido archivo 1")
     file2 = io.BytesIO(b"contenido archivo 2")

@@ -80,7 +80,14 @@ async def process_file(file_path: str) -> dict:
     # ---------- LLM Extraction ----------
     try:
         logger_log("Extracting entities using LLM", "info", trace_id, file_path, "llm")
-        entities = extract_entities_with_ollama(doc_type, text)
+        entities, model_response = extract_entities_with_ollama(doc_type, text)
+        logger.info("LLM response",
+        extra={
+            "trace_id": trace_id,
+            "file": str(file_path),
+            "phase": "llm",
+            "raw_response": model_response[:1000]   # ajusta len si quieres
+        })
     except json.JSONDecodeError as e:
         logger_log("LLM returned malformed JSON", "warning", trace_id, file_path, "llm", e)
         raise HTTPException(status_code=502, detail={

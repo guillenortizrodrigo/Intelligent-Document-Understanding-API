@@ -71,7 +71,7 @@ def extract_entities_with_ollama(document_type: str, document_text: str):
         for f in field_list
     }
     
-    return result
+    return result , raw
 
 
 
