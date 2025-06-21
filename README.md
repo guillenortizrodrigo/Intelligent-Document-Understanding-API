@@ -16,6 +16,7 @@
 - [Example of use ](#example-of-use)
 - [Requirements](#requirements)
 - [Environment variables and LLM configuration](#environment-variables-and-llm-configuration)
+- [Logging and Observability](#logging-and-observability)
 - [Installation](#installation)
 - [Installation with Docker](#installation-with-docker)
 - [Running the App](#running-the-app)
@@ -161,6 +162,80 @@ To switch to OpenAI / Azure OpenAI:
 2. Pass your `OPENAI_API_KEY` via headers in `HEADERS = {...}`.
 3. Update the payload shape if your provider requires `model`, `max_tokens`,
    `temperature`, etc.
+
+
+---
+
+
+## Logging and Observability
+
+This project uses structured **JSON logs** via [`python-json-logger`](https://pypi.org/project/python-json-logger/).
+
+### Features
+
+- All logs include:
+  - `trace_id` — unique per request
+  - `file` — full path of the uploaded file
+  - Optional fields: `phase`, `error`, `processing_time`
+- Logs are written to:
+  - Console (`stderr`)
+  - Rotating log file: `logs/app.log` (rotated daily, 14-day retention)
+
+---
+
+### Error logs
+
+Errors are logged with a structured JSON entry that includes the error message and processing phase:
+
+```json
+{
+  "asctime": "2025-06-20 18:22:04,993",
+  "levelname": "ERROR",
+  "name": "logging_setup",
+  "message": "OCR failed",
+  "trace_id": "1a51b256-1815-419b-b529-618b6e419d66",
+  "file": "uploads/temp_a9e9a149f4b9429d9e76db60b8f70036_527814380+-4380.jpg",
+  "phase": "ocr",
+  "error": "error_message"
+}
+```
+
+---
+
+### Info logs
+
+Informational messages follow the same structure, but the `error` field is an empty string (`""`), and the phase indicates what stage of the pipeline is being logged:
+
+```json
+{
+  "asctime": "2025-06-20 18:22:04,993",
+  "levelname": "INFO",
+  "name": "logging_setup",
+  "message": "Processing image file",
+  "trace_id": "1a51b256-1815-419b-b529-618b6e419d66",
+  "file": "uploads/temp_....jpg",
+  "phase": "ocr",
+  "error": ""
+}
+```
+
+---
+
+### Completion log
+
+Once a document has been fully processed, a final log is recorded summarizing the total processing time:
+
+```json
+{
+  "asctime": "2025-06-20 18:22:10,652",
+  "levelname": "INFO",
+  "name": "logging_setup",
+  "message": "File Process Completed",
+  "trace_id": "1a51b256-1815-419b-b529-618b6e419d66",
+  "file": "uploads/temp_....jpg",
+  "time": "5.659293875000003"
+}
+```
 
 
 ---
