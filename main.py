@@ -9,6 +9,9 @@ from ocr import ocr_image, ocr_pdf
 from classifier import classify_document
 from extractor import extract_entities_with_ollama
 import time
+import json
+from logging_setup import logger
+import uuid
 
 ALLOWED_EXTENSIONS = {"pdf", "png", "jpg", "jpeg"}
 UPLOAD_DIR = "uploads"
@@ -18,36 +21,96 @@ app = FastAPI(title="Entity Extraction API")
 def allowed_file(filename: str) -> bool:
     return filename.split(".")[-1].lower() in ALLOWED_EXTENSIONS
 
+def logger_log(message, type, trace_id, file, phase, error=""):
+    log_data = {
+        "trace_id": trace_id,
+        "file": str(file),
+        "phase": phase,
+        "error": str(error)
+    }
+    if type == "error":
+        logger.error(message, extra=log_data, exc_info=True)
+    elif type == "warning":
+        logger.warning(message, extra=log_data)
+    elif type == "info":
+        logger.info(message, extra=log_data)
+
+
 async def process_file(file_path: str) -> dict:
+    trace_id = str(uuid.uuid4())
     t0 = time.perf_counter()
     ext = Path(file_path).suffix.lower()
 
     # ---------- OCR ----------
-    if ext == ".pdf":
-        text = ocr_pdf(Path(file_path))
-    else:
-        text = ocr_image(Path(file_path))
+    try:
+        if ext == ".pdf":
+            logger_log("Processing PDF file", "info", trace_id, file_path, "ocr")
+            text = ocr_pdf(Path(file_path))
+        else:
+            logger_log("Processing image file", "info", trace_id, file_path, "ocr")
+            text = ocr_image(Path(file_path))
+    except Exception as e:
+        logger_log("OCR failed", "error", trace_id, file_path, "ocr", e)
+        raise HTTPException(status_code=500, detail={
+            "error": "OCRFailure",
+            "message": "OCR processing failed",
+            "trace_id": trace_id
+        })
 
     if not text.strip():
-        raise HTTPException(
-            status_code=415,
-            detail="No legible text found in document"
-        )
-        
-    # ---------- classification ----------
-    doc_type, confidence, hits = classify_document(text)
+        logger_log("No text found in document", "warning", trace_id, file_path, "ocr")
+        raise HTTPException(status_code=415, detail={
+            "error": "NoTextFound",
+            "message": "No legible text found in document",
+            "trace_id": trace_id
+        })
 
-    # ---------- LLM process ----------
-    entities = extract_entities_with_ollama(doc_type,text)
+    # ---------- Classification ----------
+    try:
+        logger_log("Classifying document", "info", trace_id, file_path, "classification")
+        doc_type, confidence, hits = classify_document(text)
+    except Exception as e:
+        logger_log("Classification failed", "error", trace_id, file_path, "classification", e)
+        raise HTTPException(status_code=500, detail={
+            "error": "ClassificationError",
+            "message": "Document classification failed",
+            "trace_id": trace_id
+        })
+
+    # ---------- LLM Extraction ----------
+    try:
+        logger_log("Extracting entities using LLM", "info", trace_id, file_path, "llm")
+        entities = extract_entities_with_ollama(doc_type, text)
+    except json.JSONDecodeError as e:
+        logger_log("LLM returned malformed JSON", "warning", trace_id, file_path, "llm", e)
+        raise HTTPException(status_code=502, detail={
+            "error": "LLMResponseInvalid",
+            "message": "The LLM returned malformed JSON",
+            "hint": "Retry with lower temperature or validate model behavior",
+            "trace_id": trace_id
+        })
+    except Exception as e:
+        logger_log("LLM extraction failed", "error", trace_id, file_path, "llm", e)
+        raise HTTPException(status_code=500, detail={
+            "error": "LLMError",
+            "message": "Entity extraction failed",
+            "trace_id": trace_id
+        })
 
     processing_time = time.perf_counter() - t0
+
+    logger.info("File Process Completed", extra={
+        "trace_id": trace_id,
+        "file": str(file_path),
+        "time": str(processing_time),
+    })
 
     return {
         "filename": Path(file_path).name,
         "document_type": doc_type,
         "confidence": round(confidence, 2),
-        "entities":entities,
-        "processing_time": processing_time
+        "entities": entities,
+        "processing_time": processing_time,
     }
 
 @app.post("/extract_entities/")
