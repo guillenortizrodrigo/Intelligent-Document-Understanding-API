@@ -5,19 +5,28 @@ from unittest.mock import patch
 
 client = TestClient(app)
 
+# --- Helper para verificar respuestas de error ---
+def assert_error_response(response, expected_code, error_code, expected_message_substring):
+    assert response.status_code == expected_code
+    detail = response.json()["detail"]
+    assert detail["error"] == error_code
+    assert expected_message_substring in detail["message"]
+
+
+# --- Pruebas unitarias ---
 def test_allowed_file():
     assert allowed_file("file.pdf")
     assert not allowed_file("file.exe")
 
-@patch("main.ocr_image", return_value="   ")  # el OCR no encontró nada
+
+@patch("main.ocr_image", return_value="   ")  # El OCR no encontró nada
 def test_invalid_file_content(mock_ocr):
     file = io.BytesIO(b"contenido falso")
     response = client.post(
         "/extract_entities/",
         files={"files": ("test.png", file, "image/png")}
     )
-    assert response.status_code == 415
-    assert "No legible text" in response.json()["detail"]
+    assert_error_response(response, 415, "NoTextFound", "No legible text")
 
 
 @patch("main.ocr_image", return_value="texto extraído del documento")
@@ -35,6 +44,7 @@ def test_successful_extraction(mock_ollama, mock_classify, mock_ocr):
     assert result["document_type"] == "invoice"
     assert result["confidence"] == 0.95
     assert result["entities"]["nombre"] == "Pedro"
+
 
 @patch("main.ocr_image", return_value="texto simulado")
 @patch("main.classify_document", return_value=("memo", 0.87, None))
@@ -55,4 +65,3 @@ def test_multiple_files(mock_ollama, mock_classify, mock_ocr):
     assert len(results) == 2
     assert results[0]["document_type"] == "memo"
     assert results[1]["entities"]["asunto"] == "reunión"
-
