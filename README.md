@@ -63,6 +63,7 @@
    - Detected document type
    - Confidence score
    - Extracted structured fields (as JSON)
+   - Confident score per entity
 
 7. **Cleanup**\
    The temporary file is deleted after processing.
@@ -73,13 +74,13 @@
 
 ### Uploaded image
 
-![Ejemplo](docs/527792930+-2930.jpg)
+![Ejemplo](docs/531572389+-2390.jpg)
 
 ### Reqeuest
 
 ```bash
 curl -X POST http://localhost:8000/extract_entities/ \
-  -F "files=@docs/527792930+-2930.jpg"
+  -F "files=@docs/531572389+-2390.jpg"
 ```
 
 ### Response
@@ -87,21 +88,62 @@ curl -X POST http://localhost:8000/extract_entities/ \
 {
   "results": [
     {
-      "filename": "temp_6188491238a34748a63f964118121767_527792930+-2930.jpg",
+      "filename": "temp_22006d8d5414437a918beef298097465_531572389+-2390.jpg",
       "document_type": "email",
-      "confidence": 1,
-      "entities": [
-        {
-          "sender": "Miller; Barry K",
-          "recipient": [
-            "Tompson, Randy; Smith, Lyle B.; Powell, Lisa (WKA)"
+      "confidence": 0.8,
+      "entities": {
+        "sender": {
+          "value": [
+            "Moskowltz, Seth",
+            "Moskowitz, Seth"
           ],
-          "subject": "Recent polls about tobacco",
-          "date_sent": "1996-Sep-04 08:55.00",
-          "body": "not found"
+          "confidence": 0.75
         },
-        2.67249108399983
-      ]
+        "recipient": {
+          "value": [
+            "Scismr Anfta Io: Moskowltz, Seth",
+            "Anita"
+          ],
+          "confidence": 0.7
+        },
+        "subject": {
+          "value": [
+            "Glantz quote {F} Prinary Dato",
+            "EW: Glantz quote"
+          ],
+          "confidence": 0.85
+        },
+        "date_sent": {
+          "value": [
+            "5/25/2d00 1,54:15 PM",
+            "2000-May-25 13,54,15",
+            "Thursday, Max 25, 2000 1:02 PM",
+            "Thursday, May 25, 2000 7,01 AM"
+          ],
+          "confidence": 0.8
+        },
+        "body": {
+          "value": [
+            "Scismr Anfta Io: Moskowltz, Seth $_ CC; Acc: Subject Glantz quote {F} Prinary Dato",
+            "See ff there 18 anything You can use out of these articles Ibey seen to be the best poggibilltles an acro89",
+            "I highlighted Many",
+            "the quotes in bold",
+            "Det me know 1f You need more.",
+            "Orlglnal Message- Fron: Moskowitz, Seth Sent Ihursday, Max 25, 2000 1:02 PM Io: Scismr AnIta Cc: Payne, Iomny Subject EW: Glantz quote",
+            "Anita",
+            "Could You please try",
+            "track down Garrison quote?",
+            "thanks",
+            "Seth",
+            "Oríglnal Megsage-_ ron: Payner tonny Sent Ihursday, May 25, 2000 7,01 AM Io: Moskowitz, Seth Subject: RE: Glantz quote",
+            "but",
+            "w9B think about more #long the linee Of gerrieon",
+            "9 g"
+          ],
+          "confidence": 0.65
+        }
+      },
+      "processing_time": 9.569157874999291
     }
   ]
 }
@@ -199,8 +241,24 @@ Errors are logged with a structured JSON entry that includes the error message a
   "error": "error_message"
 }
 ```
+### LLM Model Response Logging
 
----
+All responses returned by the LLM are logged to help with future improvements, debugging, and auditability. These logs include the original `raw_response` string returned by the model, along with relevant metadata for traceability.
+
+#### Example log output (JSON structured):
+
+```json
+{
+  "asctime": "2025-06-20 19:12:24,648",
+  "levelname": "INFO",
+  "name": "logging_setup",
+  "message": "LLM response",
+  "trace_id": "1066cb9e-fca7-4af2-a044-0bf41d4f42ee",
+  "file": "uploads/temp_22006d8d5414437a918beef298097465_531572389+-2390.jpg",
+  "phase": "llm",
+  "raw_response": "{\n  \"sender\": {\n    \"value\": [\"Moskowltz, Seth\", \"Moskowitz, Seth\"],\n    \"confidence\": 0.75\n  },\n  \"recipient\": {\n    \"value\": [\"Scismr Anfta Io: Moskowltz, Seth\", \"Anita\"],\n    \"confidence\": 0.7\n  },\n  \"subject\": {\n    \"value\": [\"Glantz quote {F} Prinary Dato\", \"EW: Glantz quote\"],\n    \"confidence\": 0.85\n  },\n  \"date_sent\": {\n    \"value\": [\"5/25/2d00 1,54:15 PM\", \"2000-May-25 13,54,15\", \"Thursday, Max 25, 2000 1:02 PM\", \"Thursday, May 25, 2000 7,01 AM\"],\n    \"confidence\": 0.8\n  },\n  \"body\": {\n    \"value\": [\"Scismr Anfta Io: Moskowltz, Seth $_ CC; Acc: Subject Glantz quote {F} Prinary Dato\", \"See ff there 18 anything You can use out of these articles Ibey seen to be the best poggibilltles an acro89\", \"I highlighted Many\", \"the quotes in bold\", \"Det me know 1f You need more.\", \"Orlglnal Message- Fron: Moskowitz, Seth Sent Ihursday, Max 25, 2000 1:02 PM Io: Scismr AnIt\"],\n    \"confidence\": 0.85\n  }
+}
+
 
 ### Info logs
 
@@ -218,8 +276,6 @@ Informational messages follow the same structure, but the `error` field is an em
   "error": ""
 }
 ```
-
----
 
 ### Completion log
 
