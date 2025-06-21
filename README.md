@@ -258,7 +258,7 @@ All responses returned by the LLM are logged to help with future improvements, d
   "phase": "llm",
   "raw_response": "{\n  \"sender\": {\n    \"value\": [\"Moskowltz, Seth\", \"Moskowitz, Seth\"],\n    \"confidence\": 0.75\n  },\n  \"recipient\": {\n    \"value\": [\"Scismr Anfta Io: Moskowltz, Seth\", \"Anita\"],\n    \"confidence\": 0.7\n  },\n  \"subject\": {\n    \"value\": [\"Glantz quote {F} Prinary Dato\", \"EW: Glantz quote\"],\n    \"confidence\": 0.85\n  },\n  \"date_sent\": {\n    \"value\": [\"5/25/2d00 1,54:15 PM\", \"2000-May-25 13,54,15\", \"Thursday, Max 25, 2000 1:02 PM\", \"Thursday, May 25, 2000 7,01 AM\"],\n    \"confidence\": 0.8\n  },\n  \"body\": {\n    \"value\": [\"Scismr Anfta Io: Moskowltz, Seth $_ CC; Acc: Subject Glantz quote {F} Prinary Dato\", \"See ff there 18 anything You can use out of these articles Ibey seen to be the best poggibilltles an acro89\", \"I highlighted Many\", \"the quotes in bold\", \"Det me know 1f You need more.\", \"Orlglnal Message- Fron: Moskowitz, Seth Sent Ihursday, Max 25, 2000 1:02 PM Io: Scismr AnIt\"],\n    \"confidence\": 0.85\n  }
 }
-
+```
 
 ### Info logs
 
